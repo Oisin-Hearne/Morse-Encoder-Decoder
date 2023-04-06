@@ -55,13 +55,12 @@ public class EncodeAndDecode {
 	public static Map<String, Character> invertedMap = new HashMap<>();
 	
 	//Both encode and decode should operate in O(n) time, using StringBuilders instead of Strings to append text.
-	//Encoding & Decoding the Bible takes a few seconds!
+	//Encoding & Decoding the Bible takes just over a second.
 	public static StringBuilder encode(JTextField input) {
 		
 		//StringBuilder is used because it is much, much faster than String when appending.
 		//O(n) instead of O(n^2)
 		StringBuilder book = new StringBuilder("");
-		
 	
 		//Using the BufferedReader format we used in labs.
 		try(var br = new BufferedReader(new InputStreamReader(new FileInputStream(input.getText())))) {
@@ -84,7 +83,6 @@ public class EncodeAndDecode {
 					if(!s.isEmpty()) {
 						book.append(s+"/ ");
 					}
-
 				}
 				book.append("\n");
 			}
@@ -95,6 +93,7 @@ public class EncodeAndDecode {
 		return book;
 	}
 	
+	//Very alike to the encode method.
 	public static StringBuilder decode(JTextField input) {
 		
 		StringBuilder book = new StringBuilder("");
@@ -125,7 +124,7 @@ public class EncodeAndDecode {
 	public static String alphabetToMorse(String word) {
 		String translation = "";
 		for(int i = 0; i < word.length(); i++) {
-			translation += morseMap.get(word.charAt(i)); //O(1)
+			translation += morseMap.get(word.charAt(i)); //O(1), as we have the key.
 			translation += " ";
 		}
 		return translation;
@@ -141,7 +140,7 @@ public class EncodeAndDecode {
 			if(invertedMap.get(builtWord[i]) ==  null)
 				return "";
 			
-			translation.append(invertedMap.get(builtWord[i]));
+			translation.append(invertedMap.get(builtWord[i])); //Also O(1)
 		}
 
 		return translation.toString()+" ";

@@ -26,10 +26,9 @@ public class Runner {
 		    }
 		});
 		
-		//Initialize the Inverted HashMap
+		//Initialize the Inverted HashMap by iterating over it, and put()'ing into the invertedMap by Value, Key.
 		for(Map.Entry<Character, String> e : EncodeAndDecode.morseMap.entrySet()) {
 			EncodeAndDecode.invertedMap.put(e.getValue(), e.getKey());
-			System.out.println(e.getKey());
 		}
 	}
 }

@@ -20,6 +20,7 @@ public class MorseWindow {
 	private JTextArea txtOutput = new JTextArea(); //The text box to output the results to
 	private JTextField txtFilePath; //The file name to process
 	private JPanel dot; //Moved dot declaration up here so I can modify it.
+	private int clickCounter = 0;
 	
 	//Used to keep track of time, using the method we used in earlier labs.
 	private float startTime = System.nanoTime(); 
@@ -92,13 +93,14 @@ public class MorseWindow {
 			switchColour(colours[15]);
 			finalTime = (System.nanoTime()-startTime)/nanoToSec;
 
-			win.setTitle("Decoded in "+timeFormatter.format(finalTime)+"s!");
+			win.setTitle("Encoded in "+timeFormatter.format(finalTime)+"s!");
 		});
 		
 		//Passes the txtFilePath to the decode method, displays the decoded text.
 		//Like the encode button, also shows the time and box color changes.
 		var btnDecodeFile = new JButton("Decode");
 		btnDecodeFile.addActionListener(e -> {
+			startTime = System.nanoTime();
 			
 			StringBuilder decodedText = new StringBuilder(EncodeAndDecode.decode(txtFilePath));
 			
@@ -133,6 +135,12 @@ public class MorseWindow {
         	//Can't use a lambda against MouseAdapter because it is not a SAM
         	public void mousePressed( MouseEvent e ) {  
         		dot.setBackground(getRandomColour());
+        		
+        		//Easter egg implementation - if the panel is clicked 10 times, the title changes.
+        		clickCounter++;
+        		if(clickCounter ==  10) {
+        			win.setTitle("Remember Windows ME?");
+        		}
         	}
         });
         
@@ -192,6 +200,7 @@ public class MorseWindow {
 		txtOutput.setText(txtOutput.getText() + " " + text);
 	}
 	
+	//Switch the dot's colour. Used by the encode/decode methods to show completeness.
 	private void switchColour(Colour col) {
 		Color newColour = Color.decode(col.hex() + "");
 		
