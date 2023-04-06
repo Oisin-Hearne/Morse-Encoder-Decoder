@@ -2,8 +2,14 @@ package ie.atu.sw;
 
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.ThreadLocalRandom;
 import java.text.DecimalFormat;
 
@@ -54,6 +60,26 @@ public class MorseWindow {
 			}
 		});
 		
+		//Adds a save button, enabling users to save decoded/encoded text.
+		//Opens FileChooser in the documents folder, and by default the file is named output.txt
+		var saveChooser = new JButton("Save...");
+		saveChooser.addActionListener((e) -> {
+			var fc = new JFileChooser(System.getProperty("user.documents"));
+			
+			fc.setDialogTitle("Save output...");
+			fc.setApproveButtonText("Save"); 
+			fc.setSelectedFile(new File("output.txt")); //Default filename
+			fc.setFileFilter(new FileNameExtensionFilter("Text Files", "txt")); //Default filetype
+			
+			var val = fc.showOpenDialog(win);
+			if (val == JFileChooser.APPROVE_OPTION) {
+				var file = fc.getSelectedFile().getAbsoluteFile();
+				txtFilePath.setText(file.getAbsolutePath());
+				
+				saveResult(txtFilePath);
+			}
+		});
+		
 		//Passes the txtFilePath to the encode method, displays the encoded text.
 		//When the encoding has been completed, the encoding time is displayed and the box color switches to green.
 		var btnEncodeFile = new JButton("Encode");
@@ -86,6 +112,7 @@ public class MorseWindow {
 		//Add all the components to the panel and the panel to the window
         top.add(txtFilePath);
         top.add(chooser);
+        top.add(saveChooser);
         top.add(btnEncodeFile);
         top.add(btnDecodeFile);
         win.getContentPane().add(top); //Add the panel to the window
@@ -169,5 +196,23 @@ public class MorseWindow {
 		Color newColour = Color.decode(col.hex() + "");
 		
 		dot.setBackground(newColour);
+	}
+	
+	//Save the current contents of txtOutput to a user-designated file.
+	private void saveResult(JTextField file) {
+		FileWriter filepath;
+		try {
+			filepath = new FileWriter(file.getText());
+			try(var bw = new BufferedWriter(filepath)) {
+				bw.write(txtOutput.getText());
+				win.setTitle("Saved file!");
+				
+			} catch (IOException f) {
+				f.printStackTrace();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 }
